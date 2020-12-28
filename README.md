@@ -1,2 +1,2 @@
 # rbtJ
-This repository contains "red black tree" implementation with (C++) and GUI visualization with (Java).
+This repository contains "red black tree" implementation and GUI visualization with (Java).
