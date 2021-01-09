@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -22,7 +23,7 @@ import rbt.RedBlackTree;
 public class Main extends JPanel {
 
 	// Object from red black tree class
-	private RedBlackTree tree = new RedBlackTree();
+	private static RedBlackTree tree = new RedBlackTree();
 	// Object from the main window of the program
 	private MainPanel mainTreePanel = new MainPanel(tree);
 
@@ -32,37 +33,81 @@ public class Main extends JPanel {
 	}
 
 	public static void main(String[] args) {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-		}
+		Scanner scanner = new Scanner(System.in);
+		int choise = 0;
+		System.out.println("Hello, Choose 1 for GUI , Choose 2 for Console");
+		choise = scanner.nextInt();
+		if(choise == 1) {
+			try {
+				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			} catch (Exception e) {
+			}
 
-		JFrame mainFrame = new JFrame();
-		try {
-			mainFrame.setIconImage(ImageIO.read(Main.class.getResource("/res/rbt_icon.png")));//set icon for the window
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+			JFrame mainFrame = new JFrame();
+			try {
+				mainFrame.setIconImage(ImageIO.read(Main.class.getResource("/res/rbt_icon.png")));//set icon for the window
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
-		mainFrame.setTitle("Red Black Tree GUI - The Team 2020");
-		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainFrame.add(new Main());// Start initializing the GUI
-		mainFrame.pack();
-		mainFrame.setVisible(true);// Calling GUI to the screen
+			mainFrame.setTitle("Red Black Tree GUI - The Team 2020");
+			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			mainFrame.add(new Main());// Start initializing the GUI
+			mainFrame.pack();
+			mainFrame.setVisible(true);// Calling GUI to the screen
+
+		}else if(choise == 2) {
+			
+			tree.insert(5);
+			tree.insert(20);
+			tree.insert(10);
+			tree.insert(2);
+			
+			System.out.println("----------------------------------");
+
+			
+			tree.printRBT(tree.getRoot(), "", true);
+			
+			System.out.println("----------------------------------");
+
+			
+			tree.removeNode(10);
+			
+			System.out.println("----------------------------------");
+
+			
+			tree.printRBT(tree.getRoot(), "", true);
+			
+			System.out.println("----------------------------------");
+
+			System.out.println("Clearing...");
+			tree.clear();
+			
+			System.out.println("----------------------------------");
+			
+			tree.printRBT(tree.getRoot(), "", true);
+		}else {
+			System.out.println("Wrong input!");
+		}
+		
+		
 
 	}
 
 	private void initViews() {
 		super.setLayout(new BorderLayout());
+		
 		setScrollPanel();
 		setBottomPanel();
 	}
 
 	private void setScrollPanel() {
 		mainTreePanel.setPreferredSize(new Dimension(9000, 4096));
+		
 		JScrollPane scroll = new JScrollPane();
 		scroll.setViewportView(mainTreePanel);
 		scroll.setPreferredSize(new Dimension(750, 500));
+		
 		setMidPoint(scroll);
 		add(scroll, BorderLayout.CENTER);
 	}
@@ -75,11 +120,13 @@ public class Main extends JPanel {
 	// This function to initialize the button with icons and its places
 	private void buttonsInit(JButton button, String imgSrc) {
 		try {
-			Image buttonIcon = ImageIO.read(getClass().getResource("/res/" + imgSrc + ".png"));
-			button.setIcon(new ImageIcon(buttonIcon));
 			button.setBorderPainted(false);
 			button.setFocusPainted(false);
 			button.setContentAreaFilled(false);
+			
+			
+			Image buttonIcon = ImageIO.read(getClass().getResource("/res/" + imgSrc + ".png"));
+			button.setIcon(new ImageIcon(buttonIcon));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

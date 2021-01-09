@@ -6,12 +6,12 @@ import rbt.Node;
 
 public class Node {
 
-	public int nodeData; // holds the key
-	public Node baseNode; // pointer to the parent
-	public Node leftChild; // pointer to left child
-	public Node rightChild; // pointer to right child
-	public int nodeColor; // 1 . Red, 0 . Black
-	
+	public Node baseNode;
+	public Node leftChild;
+	public Node rightChild;
+
+	public int nodeData;
+	public int nodeColor; // 0 -> Black, 1 -> Red
 
 	public int getNodeData() {
 		return nodeData;
@@ -55,9 +55,9 @@ public class Node {
 
 	public Color getColorCode() {
 		if (isRedColor())
-			return new Color(250, 70, 70);
+			return new Color(255, 0, 0);
 		else
-			return new Color(70, 70, 70);
+			return new Color(0, 0, 0);
 
 	}
 

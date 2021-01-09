@@ -9,7 +9,7 @@ public class RedBlackTree {
 	// nill node of the tree node
 	private Node nill;
 
-	// Constructor
+	// Constructor of Red Black Tree
 	public RedBlackTree() {
 		nill = new Node();
 		nill.nodeColor = 0;
@@ -17,14 +17,18 @@ public class RedBlackTree {
 		nill.rightChild = null;
 		root = nill;
 	}
+	
+
 
 	// Function to insert a new node to the red black tree
 	public void insert(int key) {
 		Node node = new Node();
+		
 		node.baseNode = null;
-		node.nodeData = key;
 		node.leftChild = nill;
 		node.rightChild = nill;
+		
+		node.nodeData = key;
 		node.nodeColor = 1; // 1 For red
 
 		Node y = null;
@@ -55,12 +59,17 @@ public class RedBlackTree {
 		if (node.baseNode.baseNode == null) {
 			return;
 		}
-		fixInsert(node);
+		refixingInsertNode(node);
 	}
 
 	// Clear the node in GUI
 	public void clear() {
 		root = null;
+		nill = new Node();
+		nill.nodeColor = 0;
+		nill.leftChild = null;
+		nill.rightChild = null;
+		root = nill;
 	}
 
 	// delete the node from the tree
@@ -77,7 +86,7 @@ public class RedBlackTree {
 				if (s.nodeColor == 1) {
 					s.nodeColor = 0;
 					x.baseNode.nodeColor = 1;
-					leftChildRotate(x.baseNode);
+					leftRotate(x.baseNode);
 					s = x.baseNode.rightChild;
 				}
 
@@ -88,13 +97,13 @@ public class RedBlackTree {
 					if (s.rightChild.nodeColor == 0) {
 						s.leftChild.nodeColor = 0;
 						s.nodeColor = 1;
-						rightChildRotate(s);
+						rightRotate(s);
 						s = x.baseNode.rightChild;
 					}
 					s.nodeColor = x.baseNode.nodeColor;
 					x.baseNode.nodeColor = 0;
 					s.rightChild.nodeColor = 0;
-					leftChildRotate(x.baseNode);
+					leftRotate(x.baseNode);
 					x = root;
 				}
 			} else {
@@ -102,7 +111,7 @@ public class RedBlackTree {
 				if (s.nodeColor == 1) {
 					s.nodeColor = 0;
 					x.baseNode.nodeColor = 1;
-					rightChildRotate(x.baseNode);
+					rightRotate(x.baseNode);
 					s = x.baseNode.leftChild;
 				}
 
@@ -113,13 +122,13 @@ public class RedBlackTree {
 					if (s.leftChild.nodeColor == 0) {
 						s.rightChild.nodeColor = 0;
 						s.nodeColor = 1;
-						leftChildRotate(s);
+						leftRotate(s);
 						s = x.baseNode.leftChild;
 					}
 					s.nodeColor = x.baseNode.nodeColor;
 					x.baseNode.nodeColor = 0;
 					s.leftChild.nodeColor = 0;
-					rightChildRotate(x.baseNode);
+					rightRotate(x.baseNode);
 					x = root;
 				}
 			}
@@ -190,41 +199,41 @@ public class RedBlackTree {
 	}
 
 	// Fix the red black tree after inserting new node
-	private void fixInsert(Node k) {
-		Node u;
+	private void refixingInsertNode(Node k) {
+		Node f;
 		while (k.baseNode.nodeColor == 1) {
 			if (k.baseNode == k.baseNode.baseNode.rightChild) {
-				u = k.baseNode.baseNode.leftChild;
-				if (u.nodeColor == 1) {
-					u.nodeColor = 0;
+				f = k.baseNode.baseNode.leftChild;
+				if (f.nodeColor == 1) {
+					f.nodeColor = 0;
 					k.baseNode.nodeColor = 0;
 					k.baseNode.baseNode.nodeColor = 1;
 					k = k.baseNode.baseNode;
 				} else {
 					if (k == k.baseNode.leftChild) {
 						k = k.baseNode;
-						rightChildRotate(k);
+						rightRotate(k);
 					}
 					k.baseNode.nodeColor = 0;
 					k.baseNode.baseNode.nodeColor = 1;
-					leftChildRotate(k.baseNode.baseNode);
+					leftRotate(k.baseNode.baseNode);
 				}
 			} else {
-				u = k.baseNode.baseNode.rightChild;
+				f = k.baseNode.baseNode.rightChild;
 
-				if (u.nodeColor == 1) {
-					u.nodeColor = 0;
+				if (f.nodeColor == 1) {
+					f.nodeColor = 0;
 					k.baseNode.nodeColor = 0;
 					k.baseNode.baseNode.nodeColor = 1;
 					k = k.baseNode.baseNode;
 				} else {
 					if (k == k.baseNode.rightChild) {
 						k = k.baseNode;
-						leftChildRotate(k);
+						leftRotate(k);
 					}
 					k.baseNode.nodeColor = 0;
 					k.baseNode.baseNode.nodeColor = 1;
-					rightChildRotate(k.baseNode.baseNode);
+					rightRotate(k.baseNode.baseNode);
 				}
 			}
 			if (k == root) {
@@ -242,43 +251,63 @@ public class RedBlackTree {
 		return node;
 	}
 
-	// rotate leftChild
-	public void leftChildRotate(Node x) {
-		Node y = x.rightChild;
-		x.rightChild = y.leftChild;
-		if (y.leftChild != nill) {
-			y.leftChild.baseNode = x;
+	// rotate left of a node
+	public void leftRotate(Node x) {
+		Node l = x.rightChild;
+		x.rightChild = l.leftChild;
+		if (l.leftChild != nill) {
+			l.leftChild.baseNode = x;
 		}
-		y.baseNode = x.baseNode;
+		l.baseNode = x.baseNode;
 		if (x.baseNode == null) {
-			this.root = y;
+			this.root = l;
 		} else if (x == x.baseNode.leftChild) {
-			x.baseNode.leftChild = y;
+			x.baseNode.leftChild = l;
 		} else {
-			x.baseNode.rightChild = y;
+			x.baseNode.rightChild = l;
 		}
-		y.leftChild = x;
-		x.baseNode = y;
+		l.leftChild = x;
+		x.baseNode = l;
 	}
 
-	// rotate rightChild of a node
-	public void rightChildRotate(Node x) {
-		Node y = x.leftChild;
-		x.leftChild = y.rightChild;
-		if (y.rightChild != nill) {
-			y.rightChild.baseNode = x;
+	// rotate right of a node
+	public void rightRotate(Node x) {
+		Node r = x.leftChild;
+		x.leftChild = r.rightChild;
+		if (r.rightChild != nill) {
+			r.rightChild.baseNode = x;
 		}
-		y.baseNode = x.baseNode;
+		r.baseNode = x.baseNode;
 		if (x.baseNode == null) {
-			this.root = y;
+			this.root = r;
 		} else if (x == x.baseNode.rightChild) {
-			x.baseNode.rightChild = y;
+			x.baseNode.rightChild = r;
 		} else {
-			x.baseNode.leftChild = y;
+			x.baseNode.leftChild = r;
 		}
-		y.rightChild = x;
-		x.baseNode = y;
+		r.rightChild = x;
+		x.baseNode = r;
 	}
+	
+	
+	 public void printRBT(Node root, String indent, boolean last) {
+		    if (root != null) {
+		      System.out.print(indent);
+		      if (last) {
+		        System.out.print("R----");
+		        indent += "   ";
+		      } else {
+		        System.out.print("L----");
+		        indent += "|  ";
+		      }
+
+		      String sColor = root.nodeColor == 1 ? "RED" : "BLACK";
+		      System.out.println(root.nodeData + "(" + sColor + ")");
+		      printRBT(root.leftChild, indent, false);
+		      printRBT(root.rightChild, indent, true);
+		    }
+	 }
+	
 
 	/*
 	 * 
@@ -296,9 +325,10 @@ public class RedBlackTree {
 	private int getDepth(Node node) {
 		if (node != null) {
 			int rightChild_depth;
+			
 			int leftChild_depth = this.getDepth(node.getLeftChild());
-			return leftChild_depth > (rightChild_depth = this.getDepth(node.getRightChild())) ? leftChild_depth + 1
-					: rightChild_depth + 1;
+			
+			return leftChild_depth > (rightChild_depth = this.getDepth(node.getRightChild())) ? leftChild_depth + 1 : rightChild_depth + 1;
 		}
 		return 0;
 	}
